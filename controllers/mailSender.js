@@ -1,22 +1,16 @@
 const winston = require('winston');
 const sgMail = require('@sendgrid/mail')
 
-sgMail.setApiKey(CONFIG.sendGridApiKey)
-const msg = {
-  to      : CONFIG.emailTo, 
-  from    : CONFIG.emailFrom,
-  subject : CONFIG.subject
-}
-
 const sendForm = (req, res) => {
 
-  winston.info("mailSender | sendForm | body : " , JSON.stringify(req.body));
-  
-  if(!(req.body && req.body.email && req.body.name && req.body.message)) {
-    winston.error("mailSender | sendForm | Some value is empty! ", JSON.stringify(req.body,null,1));
-    res.status(422).send("Some value is empty!");
-    return;
+  sgMail.setApiKey(CONFIG.sendGridApiKey)
+  var msg = {
+    to      : CONFIG.emailTo, 
+    from    : CONFIG.emailFrom,
+    subject : CONFIG.subject
   }
+
+  winston.info("mailSender | sendForm | body : " , JSON.stringify(req.body));
 
   sgMail.send({
     ...msg,
@@ -28,10 +22,10 @@ const sendForm = (req, res) => {
                 <div style=" margin-top: 3em; margin-bottom: 3em; background-color: #FFF;
                 margin: auto;
                 padding: 1em 3em 1em 3em;">
-                    <h4 style="margin-bottom: .5em;">Hola Sebastian.</h4>
-                    <p>Tienes un nuevo mensaje de <a href="www.sebastian-gutierrez.com">tu sitio web</a>.</p>
+                    <h4 style="margin-bottom: .5em;">Hello, ${CONFIG.userName}!</h4>
+                    <p>You have a new message from <a href="${CONFIG.website}">tu sitio web</a>.</p>
                     <div style=" margin-top: 1.5em;">
-                      ${Object.entries(req.body).map(element => { return `<p><strong>${element[0]}: </strong> ${element[1]}</p>` })}
+                      ${(Object.entries(req.body).map(element => { return `<p><strong>${element[0]}: </strong> ${element[1]}</p>` })).join(" ")}
                     </div>
                 </div>
             </body>
