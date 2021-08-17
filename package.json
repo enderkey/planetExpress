@@ -1,0 +1,29 @@
+{
+  "name": "planetexpress",
+  "version": "1.0.0",
+  "description": "Form backend, API and email service for HTML forms.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enderkey/planetExpress.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/enderkey/planetExpress/issues"
+  },
+  "homepage": "https://github.com/enderkey/planetExpress#readme",
+  "dependencies": {
+    "@sendgrid/mail": "^7.4.5",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.12",
+    "request": "^2.88.2",
+    "winston": "^1.1.2"
+  }
+}
