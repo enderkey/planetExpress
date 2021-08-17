@@ -43,3 +43,4 @@ curl -X POST \
 ```
 
 ## Output
+![alt text](./output.png)
