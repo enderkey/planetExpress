@@ -7,7 +7,7 @@ npm install
 ```
 
 # Before running
-You must to set the next environment variables:
+You must set the next environment variables:
 | Environment variable | Description |
 | :---------: | :---------: |
 | SENDGRID_API_KEY | Sendgrid api key. You can get your api key [here](https://sendgrid.com/). |
