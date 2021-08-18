@@ -27,20 +27,22 @@ nodemon .
 ```
 
 # Example
-## Input
+## Code
 
 ```
-curl -X POST \
-  http://localhost:3002/sendForm \
-  -H 'Content-Type: application/json' \
-  -H 'Postman-Token: 6989d461-feea-42f2-a2c0-4a7af3441563' \
-  -H 'cache-control: no-cache' \
-  -d '{
-    "name" : "Elon Musk",
-    "email" : "elon@tesla.com",
-    "message" : "Hey, do you want to buy a car?"
-}'
+<form action="http://localhost:3002/sendForm" method="post">
+  <label for="name">Name</label>
+  <input name="Name" id="name" type="text">
+  
+  <label for="email">Email</label>
+  <input name="Email" id="email" type="email">
+  
+  <label for="message">Message</label>
+  <input name="Message" id="message" type="email">
+  
+  <button type="submit">Submit</button>
+</form>
 ```
 
-## Output
+## Email
 ![alt text](./output.png)
