@@ -23,7 +23,7 @@ const sendForm = (req, res) => {
                 margin: auto;
                 padding: 1em 3em 1em 3em;">
                     <h4 style="margin-bottom: .5em;">Hello, ${CONFIG.userName}!</h4>
-                    <p>You have a new message from <a href="${CONFIG.website}">tu sitio web</a>.</p>
+                    <p>You have a new message from <a href="${CONFIG.website}">your website</a>.</p>
                     <div style=" margin-top: 1.5em;">
                       ${(Object.entries(req.body).map(element => { return `<p><strong>${element[0]}: </strong> ${element[1]}</p>` })).join(" ")}
                     </div>
