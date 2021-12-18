@@ -1,47 +1,49 @@
 const winston = require('winston');
-const sgMail = require('@sendgrid/mail')
+const sgMail = require('@sendgrid/mail');
+const fs = require('fs');
+const restStatus = require('./enum/restStatus.js');
 
-const sendForm = (req, res) => {
+const buildHtml = async ({ body }) => {
+  
+  const message = Object.entries(body).map(([title, value]) => `<p><strong>${title}: </strong> ${value}</p>`).join('');
+  
+  const params = {
+    '__username__': process.env.username,
+    '__website__' : process.env.website,
+    '__message__' : message
+  };
 
-  sgMail.setApiKey(CONFIG.sendGridApiKey)
-  var msg = {
-    to      : CONFIG.emailTo, 
-    from    : CONFIG.emailFrom,
-    subject : CONFIG.subject
+  let template = await fs.readFileSync('./templates/template.html', 'utf8');
+
+  for( const [ key , value ] of Object.entries(params) ) {
+    template = template.replace(key, value);
   }
 
-  winston.info("mailSender | sendForm | body : " , JSON.stringify(req.body));
+  return template;
+  
+}
 
-  sgMail.send({
-    ...msg,
-    html: `<html>    
-            <body style="padding: 9em 0; font-family: 'Roboto', sans-serif;
-            background-color: #f9f9f9;
-            display: flex;
-            color: #737f8d">
-                <div style=" margin-top: 3em; margin-bottom: 3em; background-color: #FFF;
-                margin: auto;
-                padding: 1em 3em 1em 3em;">
-                    <h4 style="margin-bottom: .5em;">Hello, ${CONFIG.userName}!</h4>
-                    <p>You have a new message from <a href="${CONFIG.website}">your website</a>.</p>
-                    <div style=" margin-top: 1.5em;">
-                      ${(Object.entries(req.body).map(element => { return `<p><strong>${element[0]}: </strong> ${element[1]}</p>` })).join(" ")}
-                    </div>
-                </div>
-            </body>
-            
-          </html>`
-  }).then(() => {
-    winston.info('mailSender | sendForm | Email sent');
-    res.writeHead(301,
-      {Location: CONFIG.redirectURL}
-    );
-    res.end()
-  })
-  .catch((error) => {
-    winston.error('mailSender | sendForm | error sending mail ', JSON.stringify(error,null,1))
-    res.status(500).send(`Error sending mail`);
-  })
+const sendForm = async ({ body }, res) => {
+
+  try {
+  
+    sgMail.setApiKey(process.env.sendGridApiKey)
+  
+    winston.info("mailSender | sendForm | body : " , JSON.stringify(body));
+    
+    await sgMail.send({
+      to      : process.env.emailTo, 
+      from    : process.env.emailFrom,
+      subject : process.env.subject,
+      html    : await buildHtml({ body })
+    });
+
+    return restStatus.codes[301];
+    
+  } catch (error) {
+    winston.error("mailSender | sendForm | Error caught! " , JSON.stringify(error,null,1));
+    return restStatus.codes[500];
+  }
 
 }
 
